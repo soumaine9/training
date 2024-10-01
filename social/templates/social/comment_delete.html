@@ -1,0 +1,31 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container">
+    
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-12 ">
+            <a href="{% url 'post-detail' object.post.pk %}"  class="btn btn-success">Back</a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+          <form method="post">
+            {% csrf_token %}
+
+            <h3>Etes vous sure de vouloir supprimer le commentaire ({{object}}) du post {{comment.post.id}} </h3>
+            <p> L'action sera irreversible</p>
+            <div class="d-grid gap-2">
+                <button class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+    </div>
+    
+</div>
+
+
+{% endblock %}

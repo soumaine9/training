@@ -1,0 +1,131 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container">
+    
+      
+    
+      <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+          <a href="{% url 'post-list' %}" class="btn btn-light">Back</a>
+        </div>
+      </div>
+    
+      <div class="row justify-content-center mt-5">
+        <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
+            <img src="{{profile.picture.url}}" alt="" class="rounded-circle" width="100" height="100">
+            {% if profile.name %}
+            <h3 class="py-4">{{ profile.name }} 
+                <span>
+                    {% if request.user == user %}
+                    <a href="{% url 'profile-edit' profile.pk %}" class="btn btn-primary">Modifier</a>
+                    {% endif %}
+                </span>
+                {% else %}
+                <h3>
+                    Veuillez renseiner le nom ==> {% if request.user == user %}
+                    <a href="{% url 'profile-edit' profile.pk %}" class="btn btn-primary">Modifier</a>
+                    {% endif %}
+
+                </h3>
+                {% endif %}
+            </h3>
+            
+            
+            {% if profile.location %}
+            <h3 class="py-4">{{ profile.location }} </h3>
+            {% endif %} 
+            
+            {% if profile.birth_date %}
+            <h3 class="py-4">{{ profile.birth_date }} </h3>
+            {% endif %} 
+            
+            {% if profile.bio %}
+            <h3 class="py-4">{{ profile.bio }} </h3>
+            {% endif %} 
+
+
+            <div class="mb-3">
+              <p>Followers : <strong>{{number_of_followers}} </strong></p>
+              
+              
+              {% if is_following %}
+              <form action="{% url 'remove-followers' profile.pk %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger">Se desabonner</button>
+              </form>
+              {% else %}
+              <form action="{% url 'add-followers' profile.pk %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-outline-success" type="submit">Abonner</button>
+              </form>
+              {% endif %}
+              
+            </div>
+
+
+          </div>
+      </div>
+      
+
+    {% for post in posts %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom position-relative">
+          {% if post.image > 0 %}
+              <div class="row">
+                {% for img in post.image.all %}
+                <div class="col-md-4 col-xs-12">
+                  <img src="{{ img.image.url }}" alt="" style="border-radius:10px ; width: 200px; height: 150px;" class="img-circle">
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <h4>Pas d'image</h4>
+              {% endif %}  
+          <p>
+
+              <a href="{% url 'profile' post.author.profile.pk %}"
+              style="text-decoration: none;" class="text-primary">
+              
+                <strong> 
+                  {{post.author}} 
+                </strong> 
+              </a>
+                
+                {{post.created_on}} 
+            </p>
+            <p>{{post.body}} </p>
+            <div class="d-flex flex-row">
+              <form action="{% url 'like' post.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{request.path}}">
+                <button type="submit" style="background-color: rgb(172, 172, 206); border: none; box-shadow: none;">
+                  <strong>  like </strong> <span>{{post.likes.all.count }} </span>
+                  </button>
+              </form>
+              <form action="{% url 'dislike' post.pk %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{request.path}}">
+                <button type="submit" style="background-color: rgb(145, 180, 145); border: none; box-shadow: none;">
+                  <strong>  dislike </strong> <span>{{post.dislikes.all.count }} </span>
+                  </button>
+              </form>
+            </div>
+            <div class="btn-link">
+              <a href="{% url 'post-detail' post.pk %}" class="stretched-link glyphicon glyphicon-eye-open">Voir</a>
+              
+            </div>
+            <div>
+              
+              <a href="{% url 'post-edit' post.pk %}" class="stretched-link glyphicon glyphicon-edit">Modifier</a>
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

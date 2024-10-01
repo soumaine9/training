@@ -1,0 +1,36 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container">
+    
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <a href="{% url 'post-list' %}"  class="btn btn-success glyphicon glyphicon-arrow-left">Back</a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3 bg-danger">
+        <div class="col-md-5 col-sm-12 border-bottom">
+          <H3>Modifier le post</H3>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12 border-bottom">
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form }}
+            <div class="d-grid gap-2">
+                <button class="btn btn-success mt-3">Envoyer</button>
+            </div>
+
+          </form>
+        </div>
+    </div>
+    
+</div>
+
+
+{% endblock %}
